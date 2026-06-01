@@ -1,0 +1,298 @@
+.admin-header{
+    background: rgba(255, 0, 0, 0.2);
+    border-radius: 16px;
+    height: 90px;
+    padding: 10px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+    margin-bottom: 15px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+.admin-logo{
+    width: 350px;
+    overflow: hidden;
+}
+.admin-logo img{
+    max-height: 70px;
+    width: auto;
+    display: block;
+}
+.admin-title {
+    text-align: right;
+}
+
+.admin-title h2 {
+    color: #12326b;
+    margin: 0;
+}
+.admin-title a {
+    display: block;
+    margin-top: 4px;
+    text-decoration: none;
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+.admin-title a:hover{
+    color:#dc2626;
+}
+.admin-page{
+    background: transparent;
+    min-height: 100vh;
+    
+}
+.admin-dashboard{
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin: 0 auto 0;
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: none;
+    box-sizing: border-box;
+}
+.admin-dashboard h1{
+    margin-bottom: 30px;
+    font-size: 32px;
+}
+.admin-dashboard form{
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+    align-items: center;
+}
+.admin-dashboard input, .admin-dashboard select{
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+}
+
+.admin-dashboard input:focus, .admin-dashboard select:focus{
+    outline: none;
+    border-color: #2d5bff;
+}
+
+.admin-dashboard button{
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    background: #2d5bff;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+.admin-dashboard button:hover{
+    transform: translateY(-2px);
+}
+.admin-products {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.admin-product{
+    width: 220px;
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.admin-product img{
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.admin-product h3{
+    margin: 10px 0 5px;
+}
+.admin-product p{
+    margin: 5px 0;
+}
+.admin-product a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: red;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+}
+.admin-categories{
+    display: flex;
+    gap:10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+.admin-categories a {
+    text-decoration: none;
+    padding: 10px 15px;
+    background: white;
+    border-radius: 8px;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.admin-categories a:hover{
+    background: #2d5bff;
+    color: white;
+}
+.edit-container{
+    width: 80%;
+    margin: 40px auto;
+}
+.edit-container form{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 500px;
+}
+.edit-container input, 
+.edit-container select{
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+.edit-container button {
+    padding: 10px;
+    background: #2d5bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.admin-section{
+    background: rgba(45, 91, 255, 0.12);
+    border:1px solid #e5e7eb;
+    border-top: none;
+    border-radius: 15px;
+    padding: 25px;
+    margin-top: -16px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    min-height: 140px;
+}
+.admin-section h2{
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #374151;
+}
+.admin-section form{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.admin-tools{
+    display: flex;
+    gap: 20px;
+    display: none;
+
+}
+
+.admin-add-product form{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.admin-add-product input,
+.admin-add-product select{
+    flex:1;
+    min-width: 140px;
+}
+.admin-add-product button{
+    flex: 1;
+}
+.admin-add-category form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.admin-add-category button{
+    width: fit-content;
+}
+.admin-manage{
+    display: flex;
+    gap:20px;
+}
+.admin-manage .admin-section{
+    flex: 1;
+}
+#search-products{
+    border-radius: 0 16px 16px 16px;
+    border: none;
+    margin-top: 0;
+    padding: 25px;
+    display: none;
+    width: 500px;
+    background:rgba(45, 91, 255, 0.12);
+    box-shadow: none;
+    position: relative;
+}
+#add-product,
+#add-category,
+#categories{
+    display: none;
+    width: 100%;
+    max-width: 800px;
+    background: rgba(45, 91, 255, 0.12);
+    border-radius: 16px;
+    margin-bottom: 10px;
+    margin-top: 0px;
+    box-shadow: none;
+   
+}
+
+#categories-wrapper{
+    display: inline-block;
+    vertical-align: top;
+    border-radius: 16px;
+    transition: 0.3s;
+    
+}
+#search-wrapper{
+    display:inline-block;
+    vertical-align: top;
+    margin-top: 0;
+    flex-direction: column;
+    padding: 0px;
+    border-radius: 16px;
+    transition: 0.3s;
+}
+#search-wrapper.active,
+#add-product-wrapper.active,
+#add-category-wrapper.active,
+#categories-wrapper.active{
+    padding-top: 0px;
+    padding-bottom: 16px;
+    background: rgba(45, 91, 255, 0.12);
+    border-radius: 16px 16px 0 0;
+    position: relative;
+    z-index: 2;
+
+}
+#admin-tabs{
+    display: flex;
+    gap:10px;
+    background: none;
+    border-radius: 16px;
+    align-items: flex-start;
+   
+
+}
+
+#admin-tabs  button{
+    padding: 14px 24px;
+    border: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
