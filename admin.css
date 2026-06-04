@@ -1,3 +1,58 @@
+/*admin page*/
+.admin-page{
+    background: transparent;
+    min-height: 100vh;
+    
+}
+.admin-dashboard{
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin: 0 auto 0;
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: none;
+    box-sizing: border-box;
+}
+.admin-dashboard h1{
+    margin-bottom: 30px;
+    font-size: 32px;
+}
+.admin-dashboard form{
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+    align-items: center;
+}
+.admin-dashboard input, 
+.admin-dashboard select{
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+}
+.admin-dashboard input:focus, 
+.admin-dashboard select:focus{
+    outline: none;
+    border-color: #2d5bff;
+}
+.admin-dashboard button{
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    background: #2d5bff;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+.admin-dashboard button:hover{
+    transform: translateY(-2px);
+}
+
+/* Header*/
 .admin-header{
     background: rgba(255, 0, 0, 0.2);
     border-radius: 16px;
@@ -13,6 +68,7 @@
     margin-right: auto;
     box-sizing: border-box;
 }
+
 .admin-logo{
     width: 350px;
     overflow: hidden;
@@ -42,65 +98,248 @@
 .admin-title a:hover{
     color:#dc2626;
 }
-.admin-page{
-    background: transparent;
-    min-height: 100vh;
-    
-}
-.admin-dashboard{
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    margin: 0 auto 0;
-    background: white;
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: none;
-    box-sizing: border-box;
-}
-.admin-dashboard h1{
-    margin-bottom: 30px;
-    font-size: 32px;
-}
-.admin-dashboard form{
+
+/*Tabs*/
+#admin-tabs{
     display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    margin-bottom: 30px;
-    align-items: center;
+    gap:10px;
+    background: none;
+    border-radius: 16px;
+    align-items: flex-start;
 }
-.admin-dashboard input, .admin-dashboard select{
-    padding: 12px 15px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    font-size: 15px;
+#search-wrapper,
+#add-product-wrapper,
+#add-category-wrapper,
+#categories-wrapper{
+    display: inline-block;
+    vertical-align: top;
+    border-radius: 16px;
+    transition: 0.3s ease;
+    padding: 0px;
 }
+#search-wrapper.active,
+#add-product-wrapper.active,
+#add-category-wrapper.active,
+#categories-wrapper.active{
+    
+    padding-bottom: 16px;
+    background: transparent;
+    border-radius: 16px 16px 0 0;
+    position: relative;
+    z-index: 2;
 
-.admin-dashboard input:focus, .admin-dashboard select:focus{
-    outline: none;
-    border-color: #2d5bff;
 }
-
-.admin-dashboard button{
-    padding: 12px 24px;
-    border: none;
-    border-radius: 10px;
+#search-wrapper.active button,
+#add-product-wrapper.active button,
+#add-category-wrapper.active button,
+#categories-wrapper.active button{
     background: #2d5bff;
     color: white;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
+    border-color: #2d5bff;
 }
-.admin-dashboard button:hover{
+#admin-tabs button{
+    background: white;
+    color: #2d5bff;
+    border: 2px solid #60a1f5;
+    border-radius: 14px;
+    padding: 14px 24px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+#admin-tabs button:hover{
+    background: #2d5bff;
+    color: white;
     transform: translateY(-2px);
 }
+#admin-tabs button.active{
+    background: #2d5bff;
+    color: white;
+}
+
+/*common elements*/
+.section-title{
+    display:block;
+}
+.section-title i{
+    color: #2d5bff;
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+/*area de conteudo das tabs*/
+.admin-sections{
+    display: none;
+    background: transparent;
+    border:none;
+    border-top: none;
+    border-radius: 15px;
+    margin-top: 0px;
+    margin-bottom: 15px;
+    box-shadow: none;
+    width: 100%;
+    
+}
+.admin-sections h2{
+    margin-top: 0;
+    margin-bottom: 0px;
+    color: #374151;
+}
+.admin-sections form{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/*search products*/
+#search-products{
+    border-radius: 16px;
+    border: none;
+    padding: 15px 15px 5px;
+    display: none;
+    background:white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    position: relative;
+}
+#search-products h2{
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+#search-products form{
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+#search-products input{
+    background: #ffffff;
+    border: 1px solid #eef2f7;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    flex: 1;
+}
+#search-product .fa-plus{
+    color: #2d5bff;
+    font-size: 20px;
+}
+
+/*add product*/
+#add-product{
+    background:#fff;
+    border-radius: 16px;
+    border: none;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    display: none;
+    position: relative;
+}
+#add-product h2{
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+#add-product input,
+#add-product select,
+#add-product textarea{
+    background: #fff;
+    border: 1px solid #eef2f7;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+#add-product button[type="submit"]{
+    background: #2d5bff;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 24px;
+    font-weight: 600;
+}
+.admin-add-product form{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.admin-add-product input,
+.admin-add-product select{
+    flex:1;
+    min-width: 140px;
+}
+.admin-add-product button{
+    flex: 1;
+}
+
+/*add category*/
+#add-category{
+    display: none;
+    background: #fff;
+    border-radius: 16px;
+    border: none;
+    padding: 15px 15px 5px;
+    margin-top: 0px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: 0.3;
+    position: relative;
+
+}
+#add-category h2{
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;    
+}
+.admin-add-category form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+}
+.admin-add-category button{
+    width: fit-content;
+}
+
+/*filter category*/
+#categories{
+    display: none;
+    background: #fff;
+    border-radius: 16px;
+    border: none;
+    padding: 15px 15px 5px;
+    margin-top: 0px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: 0.3;
+    position: relative;
+}
+#categories h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+
+}
+.admin-categories{
+    display: flex;
+    gap:10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+.admin-categories a {
+    text-decoration: none;
+    padding: 10px 15px;
+    background: white;
+    border-radius: 8px;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.admin-categories a:hover{
+    background: #2d5bff;
+    color: white;
+}
+
+/*products*/
 .admin-products {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
 }
 .admin-product{
-    width: 220px;
+    width: 235px;
     background: white;
     border-radius: 15px;
     padding: 15px;
@@ -127,24 +366,8 @@
     text-decoration: none;
     border-radius: 8px;
 }
-.admin-categories{
-    display: flex;
-    gap:10px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-}
-.admin-categories a {
-    text-decoration: none;
-    padding: 10px 15px;
-    background: white;
-    border-radius: 8px;
-    color: #333;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-.admin-categories a:hover{
-    background: #2d5bff;
-    color: white;
-}
+
+/*edit page*/
 .edit-container{
     width: 80%;
     margin: 40px auto;
@@ -167,132 +390,5 @@
     color: white;
     border: none;
     border-radius: 8px;
-    cursor: pointer;
-}
-.admin-section{
-    background: rgba(45, 91, 255, 0.12);
-    border:1px solid #e5e7eb;
-    border-top: none;
-    border-radius: 15px;
-    padding: 25px;
-    margin-top: -16px;
-    margin-bottom: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    min-height: 140px;
-}
-.admin-section h2{
-    margin-top: 0;
-    margin-bottom: 20px;
-    color: #374151;
-}
-.admin-section form{
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-.admin-tools{
-    display: flex;
-    gap: 20px;
-    display: none;
-
-}
-
-.admin-add-product form{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-.admin-add-product input,
-.admin-add-product select{
-    flex:1;
-    min-width: 140px;
-}
-.admin-add-product button{
-    flex: 1;
-}
-.admin-add-category form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-.admin-add-category button{
-    width: fit-content;
-}
-.admin-manage{
-    display: flex;
-    gap:20px;
-}
-.admin-manage .admin-section{
-    flex: 1;
-}
-#search-products{
-    border-radius: 0 16px 16px 16px;
-    border: none;
-    margin-top: 0;
-    padding: 25px;
-    display: none;
-    width: 500px;
-    background:rgba(45, 91, 255, 0.12);
-    box-shadow: none;
-    position: relative;
-}
-#add-product,
-#add-category,
-#categories{
-    display: none;
-    width: 100%;
-    max-width: 800px;
-    background: rgba(45, 91, 255, 0.12);
-    border-radius: 16px;
-    margin-bottom: 10px;
-    margin-top: 0px;
-    box-shadow: none;
-   
-}
-
-#categories-wrapper{
-    display: inline-block;
-    vertical-align: top;
-    border-radius: 16px;
-    transition: 0.3s;
-    
-}
-#search-wrapper{
-    display:inline-block;
-    vertical-align: top;
-    margin-top: 0;
-    flex-direction: column;
-    padding: 0px;
-    border-radius: 16px;
-    transition: 0.3s;
-}
-#search-wrapper.active,
-#add-product-wrapper.active,
-#add-category-wrapper.active,
-#categories-wrapper.active{
-    padding-top: 0px;
-    padding-bottom: 16px;
-    background: rgba(45, 91, 255, 0.12);
-    border-radius: 16px 16px 0 0;
-    position: relative;
-    z-index: 2;
-
-}
-#admin-tabs{
-    display: flex;
-    gap:10px;
-    background: none;
-    border-radius: 16px;
-    align-items: flex-start;
-   
-
-}
-
-#admin-tabs  button{
-    padding: 14px 24px;
-    border: none;
-    border-radius: 14px;
-    font-size: 15px;
-    font-weight: 600;
     cursor: pointer;
 }
