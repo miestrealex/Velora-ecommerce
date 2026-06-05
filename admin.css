@@ -158,12 +158,14 @@
 
 /*common elements*/
 .section-title{
-    display:block;
+    display:flex;
+    align-items: center;
+    gap: 12px;
 }
 .section-title i{
     color: #2d5bff;
     font-size: 18px;
-    margin-right: 10px;
+    margin-right: 0px;
 }
 
 /*area de conteudo das tabs*/
@@ -188,6 +190,12 @@
     display: flex;
     gap: 10px;
     align-items: center;
+}
+.section-title i {
+    color: #2d5bff;
+    font-size: 20px;
+    width: 20px;
+    text-align: center;
 }
 
 /*search products*/
@@ -216,17 +224,14 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     flex: 1;
 }
-#search-product .fa-plus{
-    color: #2d5bff;
-    font-size: 20px;
-}
+
 
 /*add product*/
 #add-product{
     background:#fff;
     border-radius: 16px;
     border: none;
-    padding: 25px;
+    padding: 15px 15px 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     display: none;
     position: relative;
@@ -264,6 +269,41 @@
 .admin-add-product button{
     flex: 1;
 }
+#image-upload{
+    display: none;
+}
+.custom-file-upload{
+    display:inline-flex;
+    align-items: center;
+    gap:10px;
+    padding: 12px 20px;
+    background: #fff;
+    border: 1px solid #eef2f7;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+.custom-file-upload:hover{
+    border-color: #2d5bff;
+    color: #2d5bff;
+}
+#file-name{
+    display: block;
+    margin-top: 10px;
+    color: #6b7280;
+    font-size: 14px;
+}
+#image-preview{
+    display: none;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-top: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
 
 /*add category*/
 #add-category{
@@ -292,6 +332,14 @@
 }
 .admin-add-category button{
     width: fit-content;
+}
+#add-category input{
+    width: 200px;
+    padding: 14px;
+    border-radius: 14px;
+    background: #fff;
+    border: 1px solid #eef2f7;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
 /*filter category*/

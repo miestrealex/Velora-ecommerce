@@ -8,13 +8,14 @@ $result = $conn->query("SELECT * FROM products WHERE id = '$id'");
 $product = $result->fetch_assoc();
 
 if (isset($_POST["update"])) {
-    $name = $_POST["name"];
+    $brand = $_POST["brand"];
+    $model = $_POST["model"];
     $price = $_POST["price"];
     $image = $_POST["image"];
     $badge = $_POST["badge"];
     $stock = $_POST["stock"];
     $category_id = $_POST["category_id"];
-    $conn->query("UPDATE products SET name='$name', price='$price', image='$image', badge='$badge', stock='$stock', category_id='$category_id'  
+    $conn->query("UPDATE products SET brand='$brand', model='$model', price='$price', image='$image', badge='$badge', stock='$stock', category_id='$category_id'  
     WHERE id='$id'");
     header("Location: admin.php");
     exit();
@@ -31,7 +32,8 @@ if (isset($_POST["update"])) {
         <h1>Edit Product</h1>
         <div class="edit-container">
             <form method="POST">
-                <input type="text" name="name" value="<?php echo $product['name']; ?>" required>
+                <input type="text" name="brand" value="<?php echo $product['brand']; ?>" required>
+                <input type="text" name="model" value="<?php echo $product['model']; ?>" required>
                 <input type="number" name="price" value="<?php echo $product['price']; ?>" required>
                 <input type="text" name="image" value="<?php echo $product['image']; ?>" required>
                 <select name="category_id" required>

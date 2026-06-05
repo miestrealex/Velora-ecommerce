@@ -28,16 +28,20 @@ $categories = $conn->query("SELECT * FROM categories");
 
 
 if (isset($_POST["add-product"])) {
-    $name = $_POST["name"];
+    $brand = $_POST["brand"];
+    $model = $_POST["model"];
     $price = $_POST["price"];
-    $image = $_POST["image"];
     $badge = $_POST["badge"];
+    $imageName = uniqid() . "_" . basename($_FILES['image']['name']);
+    $imageTmp = $_FILES['image']['tmp_name'];
+    $image = "upload/products/" . $imageName;
+    move_uploaded_file($imageTmp, $image);
     $category_id = $_POST["category_id"];
     $stock = $_POST["stock"];
     if ($price <= 0 || $stock <= 0) {
         echo "Price and Stock must be greater than Zero.";
     } else {
-        $sql = "INSERT INTO products (name, price, image, badge, category_id, stock) VALUES ('$name', '$price', '$image', '$badge', '$category_id', '$stock')";
+        $sql = "INSERT INTO products (brand, model, price, image, badge, category_id, stock) VALUES ('$brand', '$model', '$price', '$image', '$badge', '$category_id', '$stock')";
         $conn->query($sql);
     }
 }
@@ -137,10 +141,11 @@ if (isset($_POST["add-category"])) {
                 <div id="add-product" class="admin-section">
                     <h2 class="section-title">
                         <i class="fa-solid fa-plus"></i>
-                        &nbsp;Add Product
+                        &nbsp; Add Product
                     </h2>
-                    <form action="" method="POST">
-                        <input type="text" name="name" placeholder="Product Name" required>
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        <input type="text" name="brand" placeholder="Brand" required>
+                        <input type="text" name="model" placeholder="Model" required>
                         <select name="category_id" required>
                             <option value="">
                                 Select Category
@@ -155,7 +160,13 @@ if (isset($_POST["add-category"])) {
                             <?php } ?>
                         </select>
                         <input type="number" name="price" min="0.01" step="0.01" placeholder="Price" required>
-                        <input type="text" name="image" placeholder="Image Path" required>
+                        <label for="image-upload" class="custom-file-upload">
+                            <i class="fa-solid fa-image"></i>
+                            Choose Image
+                        </label>
+                        <input type="file" id="image-upload" name="image" accept="image/*"required>
+                        <span id="file-name"> No image selected</span>
+                        <img id="image-preview" src="" alt="Preview"></span>
                         <select name="badge" required>
                             <option value="">Select Badge</option>
                             <option value="NEW">NEW</option>
@@ -172,7 +183,10 @@ if (isset($_POST["add-category"])) {
 
                 <!---interior do botao add-category---->
                 <div id="add-category" class="admin-section">
-                    <h2>Add Category</h2>
+                    <h2 class="section-title">
+                        <i class="fa-solid fa-folder-plus"></i>
+                        &nbsp; Add Category
+                    </h2>
                     <?php
                     if (isset($_GET['error']) && $_GET['error'] == 'exists') {
                         echo "<p> Category already exists.</p>";
@@ -201,7 +215,11 @@ if (isset($_POST["add-category"])) {
 
                 <!---interior do botao categories---->
                 <div id="categories" class="admin-section">
-                    <h2>Filter Category</h2>
+                    <h2 class="section-title">
+                        <i class="fa-solid fa-list"></i>
+                        &nbsp; Add Category
+                    </h2>
+
                     <div class="admin-categories">
                         <a href="admin.php">All Products</a>
                         <?php $categories->data_seek(0);
@@ -223,7 +241,7 @@ if (isset($_POST["add-category"])) {
                     <?php
                     if (isset($_GET['search']) && !empty($_GET['search'])) {
                         $search = $_GET['search'];
-                        $products = $conn->query("SELECT * FROM products WHERE name LIKE '%$search%'");
+                        $products = $conn->query("SELECT * FROM products WHERE brand LIKE '%$search%' OR model LIKE '%$search%'");
                     } elseif (isset($_GET['category'])) {
                         $category_id = $_GET['category'];
                         $products = $conn->query("SELECT * FROM products WHERE category_id = '$category_id'");
@@ -233,7 +251,8 @@ if (isset($_POST["add-category"])) {
                     while ($product = $products->fetch_assoc()) { ?>
                         <div class="admin-product">
                             <img src="<?php echo $product['image']; ?>" width="100">
-                            <h3><?php echo $product['name']; ?></h3>
+                            <h3><?php echo $product['brand']; ?></h3>
+                            <p><?php echo $product['model'];?></p>
                             <p>CHF <?php echo $product['price']; ?></p>
                             <p><?php echo $product['badge']; ?></p>
                             <p>Stock: <?php echo $product['stock']; ?></p>
@@ -334,6 +353,31 @@ if (isset($_POST["add-category"])) {
     document.getElementById("add-product-wrapper").classList.remove("active");
     document.getElementById("add-category-wrapper").classList.remove("active");
     document.getElementById("categories-wrapper").classList.remove("active");
+
+});
+
+document.getElementById("image-upload").addEventListener("change", function(){
+
+    const file = this.files[0];
+
+    if(file){
+
+        document.getElementById("file-name").textContent = file.name;
+
+        const reader = new FileReader();
+
+        reader.onload = function(e){
+
+            const preview = document.getElementById("image-preview");
+
+            preview.src = e.target.result;
+            preview.style.display = "block";
+
+        }
+
+        reader.readAsDataURL(file);
+
+    }
 
 });
 
