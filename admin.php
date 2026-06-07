@@ -61,6 +61,12 @@ if (isset($_POST["add-category"])) {
     }
 
 }
+$editProduct = null;
+if (isset($_GET["edit"])) {
+    $id = $_GET["edit"];
+    $result = $conn->query("SELECT * FROM products WHERE id = '$id'");
+    $editProduct = $result->fetch_assoc();
+}
 ?>
 
 <!DOCTYPE html>
@@ -102,6 +108,14 @@ if (isset($_POST["add-category"])) {
                             &nbsp;
                         </i>
                         Add Product
+                    </button>
+                </div>
+                <div id ="edit-product-wrapper">
+                    <button onclick="toggleEditMode()">
+                        <i class="fa-solid fa-pen">
+                            &nbsp;
+                        </i>
+                        Edit Product
                     </button>
                 </div>
                 <div id="add-category-wrapper">
@@ -256,15 +270,16 @@ if (isset($_POST["add-category"])) {
                             <p>CHF <?php echo $product['price']; ?></p>
                             <p><?php echo $product['badge']; ?></p>
                             <p>Stock: <?php echo $product['stock']; ?></p>
-                            <a href="edit.php?id=<?php echo $product['id']; ?>">
+                            
+                            <div class="edit-actions">
+                                <a href="admin.php?edit=<?php echo $product['id']; ?>">
                                 Edit
-                            </a>
-                            <a href="admin.php?delete=<?php echo $product['id']; ?>"
-                                onclick="return confirm('Tem a certeza que quer apagar este produto?')">
-                                Delete
-                            </a>
-
-
+                                </a>
+                                <a href="admin.php?delete=<?php echo $product['id']; ?>"
+                                    onclick="return confirm('Tem a certeza que quer apagar este produto?')">
+                                    Delete
+                                </a>
+                            </div>
                         </div>
                     <?php } ?>
                 </div>
@@ -288,6 +303,7 @@ if (isset($_POST["add-category"])) {
 
                 document.getElementById("search-wrapper").classList.remove("active");
                 document.getElementById("add-product-wrapper").classList.remove("active");
+                document.getElementById("edit-product-wrapper").classList.remove("edit-active");
                 document.getElementById("add-category-wrapper").classList.remove("active");
                 document.getElementById("categories-wrapper").classList.remove("active");
 
@@ -303,8 +319,13 @@ if (isset($_POST["add-category"])) {
             // Remove molduras ativas
             document.getElementById("search-wrapper").classList.remove("active");
             document.getElementById("add-product-wrapper").classList.remove("active");
+            document.getElementById("edit-product-wrapper").classList.remove("active");
             document.getElementById("add-category-wrapper").classList.remove("active");
             document.getElementById("categories-wrapper").classList.remove("active");
+
+            //desliga o modo edicao 
+            document.body.classList.remove("edit-mode");
+            document.getElementById("edit-product-wrapper").classList.remove("edit-active");
 
             // Abre o painel clicado
             tabsContent.style.display = "block";
@@ -380,8 +401,26 @@ document.getElementById("image-upload").addEventListener("change", function(){
     }
 
 });
+let editMode = false;
 
+function toggleEditMode(){
+    // Fecha todos os painéis
+    document.getElementById("search-products").style.display = "none";
+    document.getElementById("add-product").style.display = "none";
+    document.getElementById("add-category").style.display = "none";
+    document.getElementById("categories").style.display = "none";
+    // Remove os estados ativos
+    document.getElementById("search-wrapper").classList.remove("active");
+    document.getElementById("add-product-wrapper").classList.remove("active");
+    document.getElementById("add-category-wrapper").classList.remove("active");
+    document.getElementById("categories-wrapper").classList.remove("active");
 
+    editMode = !editMode;
+    document.body.classList.toggle("edit-mode");
+    document.getElementById("edit-product-wrapper").classList.toggle("edit-active");
+
+    
+}
     </script>
 </body>
 

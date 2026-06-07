@@ -109,6 +109,7 @@
 }
 #search-wrapper,
 #add-product-wrapper,
+#edit-product-wrapper,
 #add-category-wrapper,
 #categories-wrapper{
     display: inline-block;
@@ -119,6 +120,7 @@
 }
 #search-wrapper.active,
 #add-product-wrapper.active,
+#edit-product-wrapper.ative,
 #add-category-wrapper.active,
 #categories-wrapper.active{
     
@@ -131,6 +133,7 @@
 }
 #search-wrapper.active button,
 #add-product-wrapper.active button,
+#edit-product-wrapper.active button,
 #add-category-wrapper.active button,
 #categories-wrapper.active button{
     background: #2d5bff;
@@ -196,6 +199,12 @@
     font-size: 20px;
     width: 20px;
     text-align: center;
+}
+.product-actions{
+    display: none;
+}
+.edit-mode .product-actions{
+    display: flex;
 }
 
 /*search products*/
@@ -413,6 +422,19 @@
     color: white;
     text-decoration: none;
     border-radius: 8px;
+}
+.admin-product .edit-actions{
+    display: none;
+}
+.edit-mode .admin-product .edit-actions{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+#edit-product-wrapper.edit-active button{
+    background: #2d5bff;
+    color: white;
+    border-color: #2d5bff;
 }
 
 /*edit page*/
