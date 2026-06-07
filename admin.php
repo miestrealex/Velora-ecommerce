@@ -249,7 +249,89 @@ if (isset($_GET["edit"])) {
             </div>
 
             <hr>
-
+                <?php if ($editProduct){?>
+                <div class="edit-modal">
+                    <div class="edit-modal-content">
+                        <div class="modal-header">
+                        <h2>Edit Product</h2>
+                        <button class="close-modal" onclick="closeEditModal()">
+                            x
+                        </button>
+                        </div>
+                        <form class="edit-form">
+                            <div class="edit-body">
+                            <div class="image-section">
+                                <img id="edit-image-preview" src="<?php echo $editProduct['image'];?>">
+                                <label for="edit-image-upload" class="upload-btn">
+                                    Change Image 
+                                </label>
+                                <input type="file" name="image" id="edit-image-upload" hidden>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Brand</label>
+                                    <input type="text" value="<?php echo $editProduct['brand'];?>">
+                                </div>
+                                <div class="form-group">
+                                    <label>Model</label>
+                                <input type="text" value="<?php echo $editProduct['model'];?>">                                
+                                </div>
+                                <div class="form-group">
+                                    <label>Badge</label>
+                                     <select name="badge" required>
+                                        <option value="NEW" <?php if ($editProduct['badge'] == 'NEW') echo "selected";?>>
+                                            NEW
+                                        </option>
+                                        <option value="SALE" <?php if ($editProduct['badge'] == 'SALE') echo "selected";?>>
+                                            SALE
+                                        </option>
+                                        <option value="HOT" <?php if ($editProduct['badge'] == 'HOT') echo "selected";?>>
+                                            HOT
+                                        </option>
+                                        <option value="LIMITED" <?php if ($editProduct['badge'] == 'LIMITED') echo "selected";?>>
+                                            LIMITED
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Category</label>
+                                    <select name="category_id" required>
+                                        <option value="">
+                                            Select Category
+                                        </option>
+                                        <?php
+                                        $categories->data_seek(0);
+                                        while ($category = $categories->fetch_assoc()) {
+                                        ?>
+                                        <option value="<?php echo $category['id']; ?>"
+                                            <?php if ($editProduct['category_id'] == $category['id']) echo 'selected'; ?>>
+                                            <?php echo $category['name']; ?>
+                                        </option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                                 <div class="form-group">
+                                    <label>Price</label>
+                                    <input type="number" value="<?php echo $editProduct['price'];?>">                                
+                                </div>
+                                 <div class="form-group">
+                                    <label>Stock</label>
+                                    <input type="number" value="<?php echo $editProduct['stock'];?>">
+                                </div>
+                            </div>
+                            </div>
+                            <div class="edit-buttons">
+                                <button type="button" class="cancel-btn" onclick="closeEditModal()">
+                                    Cancel
+                                </button>
+                                <button type="submit" class="preview-btn">
+                                    Update Product
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <?php } ?>
                 <h2>Products</h2>
                 <div class="admin-products">
                     <?php
@@ -275,8 +357,7 @@ if (isset($_GET["edit"])) {
                                 <a href="admin.php?edit=<?php echo $product['id']; ?>">
                                 Edit
                                 </a>
-                                <a href="admin.php?delete=<?php echo $product['id']; ?>"
-                                    onclick="return confirm('Tem a certeza que quer apagar este produto?')">
+                                <a href="#" onclick="return confirm('Tem a certeza que quer apagar este produto?')">
                                     Delete
                                 </a>
                             </div>
@@ -421,6 +502,20 @@ function toggleEditMode(){
 
     
 }
+
+function closeEditModal(){
+    window.location.href="admin.php";
+}
+document.getElementById("edit-image-upload").addEventListener("change", function(){
+    const file = this.files[0];
+    if (file){
+        const reader = new FileReader ();
+        reader.onload = function(e){
+            document.getElementById("edit-image-preview").src =e.target.result;
+        }
+        reader.readAsDataURL (file);
+    }
+});
     </script>
 </body>
 
