@@ -585,3 +585,10 @@
     font-weight: 600;
     color: #374151;
 }
+.upload-btn{
+    cursor: pointer;
+    color: #2d5bff;
+}
+#edit-image-upload{
+    display: none;
+}

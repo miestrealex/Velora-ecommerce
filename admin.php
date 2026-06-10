@@ -9,6 +9,8 @@ if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
     $sql = "DELETE FROM products WHERE id = '$id'";
     $conn->query($sql);
+    header("Location:admin.php");
+    exit();
 }
 if (isset($_GET['delete-category'])) {
     $id = $_GET['delete-category'];
@@ -66,6 +68,30 @@ if (isset($_GET["edit"])) {
     $id = $_GET["edit"];
     $result = $conn->query("SELECT * FROM products WHERE id = '$id'");
     $editProduct = $result->fetch_assoc();
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $id = $_POST["id"];
+    $brand = $_POST["brand"];
+    $model = $_POST["model"];
+    $badge = $_POST["badge"];
+    $category_id = $_POST["category_id"];
+    $price = $_POST["price"];
+    $stock = $_POST["stock"];
+
+    $image = $editProduct["image"];
+    if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+        $image = "uploads/products/" . basename($_FILES["image"]["name"]);
+        move_uploaded_file($_FILES['image']['tmp_name'], $image);
+    }
+
+    $sql = "UPDATE products SET brand = '$brand', model = '$model', badge = '$badge', image = '$image', category_id = '$category_id', price = '$price', stock = '$stock' WHERE id = '$id'";
+    if ($conn->query($sql)){
+        header("Location: admin.php");
+        exit();
+    }else{
+        die ($conn->error);
+    }
 }
 ?>
 
@@ -258,23 +284,25 @@ if (isset($_GET["edit"])) {
                             x
                         </button>
                         </div>
-                        <form class="edit-form">
+                        <form class="edit-form" method="POST" enctype="multipart/form-data">
                             <div class="edit-body">
                             <div class="image-section">
                                 <img id="edit-image-preview" src="<?php echo $editProduct['image'];?>">
                                 <label for="edit-image-upload" class="upload-btn">
+                                    <i class="fa-solid fa-image"></i>
                                     Change Image 
                                 </label>
                                 <input type="file" name="image" id="edit-image-upload" hidden>
                             </div>
                             <div class="form-grid">
                                 <div class="form-group">
+                                    <input type="hidden" name="id" value="<?php echo $editProduct['id']; ?>"
                                     <label>Brand</label>
-                                    <input type="text" value="<?php echo $editProduct['brand'];?>">
+                                    <input type="text" name="brand" value="<?php echo $editProduct['brand'];?>">
                                 </div>
                                 <div class="form-group">
                                     <label>Model</label>
-                                <input type="text" value="<?php echo $editProduct['model'];?>">                                
+                                <input type="text" name="model" value="<?php echo $editProduct['model'];?>">                                
                                 </div>
                                 <div class="form-group">
                                     <label>Badge</label>
@@ -312,11 +340,11 @@ if (isset($_GET["edit"])) {
                                 </div>
                                  <div class="form-group">
                                     <label>Price</label>
-                                    <input type="number" value="<?php echo $editProduct['price'];?>">                                
+                                    <input type="number" name="price" value="<?php echo $editProduct['price'];?>">                                
                                 </div>
                                  <div class="form-group">
                                     <label>Stock</label>
-                                    <input type="number" value="<?php echo $editProduct['stock'];?>">
+                                    <input type="number" name="stock" value="<?php echo $editProduct['stock'];?>">
                                 </div>
                             </div>
                             </div>
@@ -357,7 +385,7 @@ if (isset($_GET["edit"])) {
                                 <a href="admin.php?edit=<?php echo $product['id']; ?>">
                                 Edit
                                 </a>
-                                <a href="#" onclick="return confirm('Tem a certeza que quer apagar este produto?')">
+                                <a href="admin.php?delete=<?php echo $product['id']; ?>" onclick="return confirm('Tem a certeza que quer apagar este produto?')">
                                     Delete
                                 </a>
                             </div>
