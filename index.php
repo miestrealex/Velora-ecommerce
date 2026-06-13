@@ -29,6 +29,9 @@ session_start();
                     <div id="user-menu">
                         <?php echo $_SESSION["user"]; ?>
                         <div id="user-dropdown">
+                            <?php if (isset($_SESSION["role"]) && $_SESSION["role"] == 2): ?>
+                                <a href="admin.php">Admin Panel</a>
+                            <?php endif; ?>
                             <a href="logout.php">Logout</a>
                         </div>
                     </div>
@@ -46,14 +49,29 @@ session_start();
         <div id="login-dropdown">
             <div class="login-top"></div>
                 <div class="login-content">
-                    <h2>Bem-vindo!</h2>
-                    <p>Entra na tua conta para continuar</p>
+                    <h2>Welcome!</h2>
+                    <p>Enter in your account to continue</p>
                     <form action="login.php" method="POST">
                         <input type="email" name="email" placeholder="Email" required>
                         <input type="password" name="password" placeholder="Password" required>
                         <button type="submit">Entrar</button>
+                        <p>Don't have accont?
+                            <a href="#" id="open-register">Register here</a>
+                        </p>
                     </form>
                 </div>
+        </div>
+        <div id="register-dropdown">
+            <div class="login-top"></div>
+            <div class="login-content">
+                <h2>Create Account</h2>
+                <form action="register.php" method="POST">
+                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <button type="submit">Register</button>
+                </form>
+            </div>
         </div>
         <div id="layout">
             <div id="shop">

@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (isset($_SESSION["role"]) && $_SESSION["role"] != 2) {
+    header("Location:index.php");
+    exit();
+}
 include "db.php";
 
 
@@ -37,6 +42,11 @@ if (isset($_POST["add-product"])) {
     $imageName = uniqid() . "_" . basename($_FILES['image']['name']);
     $imageTmp = $_FILES['image']['tmp_name'];
     $image = "upload/products/" . $imageName;
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+
+    if (!in_array($_FILES['image']['type'], $allowedTypes)) {
+        die ('Just permitted images JPG, PNG and WEBP.');
+    }
     move_uploaded_file($imageTmp, $image);
     $category_id = $_POST["category_id"];
     $stock = $_POST["stock"];

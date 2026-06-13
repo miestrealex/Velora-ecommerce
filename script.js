@@ -1,7 +1,5 @@
-
+let cartItems = JSON.parse(localStorage.getItem("cartItens")) || [];
 let cartCount = 0;
-
-let cartItems = [];
 
 let allProducts = [];
 
@@ -22,6 +20,8 @@ const userDropdown = document.getElementById("user-dropdown");
 const productsContainer = document.getElementById("products");
 
 const search = document.getElementById("search");
+const registerDropdown = document.getElementById("register-dropdown");
+const openRegister = document.getElementById("open-register");
 
 /* =========================
    OVERLAY
@@ -59,18 +59,13 @@ function updateOverlay(){
 ========================= */
 
 const savedCart = localStorage.getItem("cartItems");
-
 if (savedCart) {
-
     cartItems = JSON.parse(savedCart);
-
     cartItems.forEach(item => {
-
         cartCount += item.quantity;
-
     });
-
 }
+document.getElementById("cart-count").innerText = cartCount;
 
 /* =========================
    FETCH PRODUCTS
@@ -118,126 +113,84 @@ function getBadgeClass(badge){
 }
 
 function displayProducts(products) {
-
     productsContainer.innerHTML = "";
-
+    console.log(products[0]);
     products.forEach(product => {
-
         productsContainer.innerHTML += `
-
         <div class="product-cart">
-
             ${product.badge ? `
                 <span class="promo-badge ${getBadgeClass(product.badge)}">
                     ${product.badge}
                 </span>
             ` : ""}
-
             <div class="product-image">
-                <img src="${product.image}" alt="${product.name}">
+                <img src="${product.image}" alt="${product.brand} ${product.model}">
             </div>
-
-            <h3>${product.name}</h3>
-
+            <div class="product-info">
+                <h3>${product.brand}</h3>
+                <h4>${product.model}</h4>
+            </div>
             <p class="price">
                 CHF ${product.price}
             </p>
-
-            <button onclick="addToCart('${product.name}', ${product.price}, '${product.image}')">
+            <button onclick="addToCart('${product.brand}', '${product.model}', ${product.price}, '${product.image}')">
                 Comprar
             </button>
-
         </div>
-
         `;
-
     });
-
 }
 
-function addToCart(productName, productPrice, productImage) {
-
+function addToCart(productBrand, productModel, productPrice, productImage) {
     cartCount++;
-
     document.getElementById("cart-count").innerText = cartCount;
-
     const existingProduct = cartItems.find(
-        item => item.name === productName
+        item => item.brand === productBrand &&
+                item.model === productModel
     );
-
     if (existingProduct) {
-
         existingProduct.quantity++;
-
     } else {
-
         cartItems.push({
-
-            name: productName,
+            brand: productBrand,
+            model: productModel,
             price: Number(productPrice),
             image: productImage,
             quantity: 1
-
         });
-
     }
-
     updateCart();
-
 }
 
 function updateCart() {
-
     const cartItemsDiv = document.getElementById("cart-items");
-
     cartItemsDiv.innerHTML = "";
-
     let total = 0;
-
     cartItems.forEach((item, index) => {
-
         const itemTotal = item.price * item.quantity;
-
         cartItemsDiv.innerHTML += `
-
         <div class="cart-item">
-
-            <img src="${item.image}" alt="${item.name}">
-
+            <img src="${item.image}" alt="${item.brand} ${item.model}">
             <div class="cart-info">
-
-                <h4>${item.name}</h4>
-
+                <h4>${item.brand}</h4>
+                <h3>${item.model}</h3>
                 <p>CHF ${item.price}</p>
-
                 <div class="quantity-controls">
-
                     <button onclick="event.stopPropagation(); decreaseQuantity(${index})">
                         -
                     </button>
-
                     <span>${item.quantity}</span>
-
                     <button onclick="event.stopPropagation(); increaseQuantity(${index})">
                         +
                     </button>
-
                 </div>
-
             </div>
-
         </div>
-
         `;
-
         total += itemTotal;
-
     });
-
     document.getElementById("cart-total").innerText =` Total: CHF ${total}`;
-
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
-
 }
 
 function increaseQuantity(index){
@@ -269,6 +222,13 @@ function decreaseQuantity(index){
     updateCart();
 
 }
+
+openRegister.addEventListener("click", function(event){
+    event.preventDefault();
+    loginDropdown.classList.remove("active");
+    registerDropdown.classList.add("active");
+    updateOverlay();
+});
 
 /* =========================
    BUTTONS
@@ -350,7 +310,8 @@ document.body.addEventListener("click", function(event){
         userIcon &&
         (
             userIcon.contains(event.target) ||
-            loginDropdown.contains(event.target)
+            loginDropdown.contains(event.target) ||
+            registerDropdown.contains(event.target)
         )
     ){
         return;
@@ -372,6 +333,10 @@ document.body.addEventListener("click", function(event){
 
     loginDropdown.classList.remove("active");
 
+    if(registerDropdown){
+        registerDropdown.classList.remove("active");
+    }
+
     if(userDropdown){
         userDropdown.classList.remove("active");
     }
@@ -389,7 +354,8 @@ search.addEventListener("input", () => {
 
     const filteredProducts = allProducts.filter(product => {
 
-        return product.name.toLowerCase().includes(searchValue);
+        return product.brand.toLowerCase().includes(searchValue) ||
+               product.model.toLowerCase().includes(searchValue);
 
     });
 

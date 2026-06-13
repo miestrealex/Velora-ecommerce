@@ -1,19 +1,23 @@
 <?php 
-
-$conn = new mysqli("localhost", "root", "", "loja");
+require 'db.php';
 
 $username = $_POST["username"];
 $email = $_POST["email"];
-$password = $_POST["password"];
+$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-$sql = "INSERT INTO users(username, email, password) VALUES ('$username', '$email', '$hashedPassword')";
-
-if ($conn->query($sql)) {
-    echo "Conta criada com sucesso";
-} else {
-    echo "Erro ao criar conta";
+$stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+$stmt->bind_param("s", $email);
+$stmt->execute([$email]);
+if ($stmt->fetch()){
+    die ("Email already exists");
 }
+
+$stmt = $conn ->prepare("INSERT INTO users (username, email, password) VALUES (?,?,?)");
+$stmt->bind_param("sss", $username, $email, $password);
+$stmt ->execute([$username, $email, $password]);
+
+header ("Location: index.php");
+exit;
+
 
 ?>
