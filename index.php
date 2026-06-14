@@ -12,6 +12,21 @@ if(isset($_GET["error"])){
         $error = "Invalid email address";
     }
 }
+$registerError = "";
+
+
+
+if(isset($_GET["registererror"])){
+    if ($_GET["registererror"] == "emptyfields"){
+        $registerError = "Please fill all fields";
+    }
+    if ($_GET["registererror"] == "invalidemail"){
+        $registerError = "Invalid email address";
+    }
+    if ($_GET["registererror"] == "emailtaken") {
+        $registerError = "Email already exists";
+    }
+}
 ?>
 
 <html>
@@ -76,10 +91,13 @@ if(isset($_GET["error"])){
                     </form>
                 </div>
         </div>
-        <div id="register-dropdown">
+        <div id="register-dropdown" class="<?php echo !empty($registerError) ?'active': ''; ?>">
             <div class="login-top"></div>
             <div class="login-content">
                 <h2>Create Account</h2>
+                <?php if(!empty($registerError)): ?>
+                            <p class="error-message"><?php echo $registerError; ?></p>
+                <?php endif; ?> 
                 <form action="register.php" method="POST">
                     <input type="text" name="username" placeholder="Username" required>
                     <input type="email" name="email" placeholder="Email" required>

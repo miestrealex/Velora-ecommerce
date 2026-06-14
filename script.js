@@ -225,6 +225,8 @@ function decreaseQuantity(index){
 
 openRegister.addEventListener("click", function(event){
     event.preventDefault();
+    event.stopPropagation();
+    
     loginDropdown.classList.remove("active");
     registerDropdown.classList.add("active");
     updateOverlay();
