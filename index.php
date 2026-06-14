@@ -1,5 +1,17 @@
 <?php 
 session_start();
+$error = "";
+if(isset($_GET["error"])){
+    if ($_GET["error"] == "invalidlogin"){
+        $error = "Invalid email or password";
+    }
+    if ($_GET["error"] == "emptyfields"){
+        $error = "Please fill in all fields";
+    }
+    if ($_GET["error"] == "invalidemail"){
+        $error = "Invalid email address";
+    }
+}
 ?>
 
 <html>
@@ -11,7 +23,7 @@ session_start();
         <title>
             Velora 
         </title>
-        <link rel="stylesheet" href="style.css?v=2">
+        <link rel="stylesheet" href="style.css?v=3">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
     </head>                          
     <body>
@@ -21,7 +33,7 @@ session_start();
             </div>
             
 
-            <input type="text" id="search" placeholder="Pesquisar produtos...">
+            <input type="text" id="search" placeholder="Search Products...">
             
             <div id="icons">
                 <i class="fa-solid fa-magnifying-glass" id="mobile-search-icon"></i>
@@ -46,15 +58,18 @@ session_start();
                 </div>
             </div>
         </header>
-        <div id="login-dropdown">
+        <div id="login-dropdown" class="<?php echo !empty($error) ?'active': ''; ?>">
             <div class="login-top"></div>
                 <div class="login-content">
                     <h2>Welcome!</h2>
                     <p>Enter in your account to continue</p>
+                    <?php if(!empty($error)): ?>
+                            <p class="error-message"><?php echo $error; ?></p>
+                    <?php endif; ?> 
                     <form action="login.php" method="POST">
                         <input type="email" name="email" placeholder="Email" required>
                         <input type="password" name="password" placeholder="Password" required>
-                        <button type="submit">Entrar</button>
+                        <button type="submit">Entry</button>
                         <p>Don't have accont?
                             <a href="#" id="open-register">Register here</a>
                         </p>
