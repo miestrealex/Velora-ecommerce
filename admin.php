@@ -1,86 +1,219 @@
 <?php
+
+// Start user session
 session_start();
+
+// Restrict access to administrators only
 if (isset($_SESSION["role"]) && $_SESSION["role"] != 2) {
-    header("Location:index.php");
+    header("Location: index.php");
     exit();
 }
+
+// Include database connection
 require_once "includes/db.php";
 
-
+// Store admin error messages
 $error = "";
 
 
+/*
+|--------------------------------------------------------------------------
+| Product Deletion
+|--------------------------------------------------------------------------
+*/
+
+// Delete a product by ID
 if (isset($_GET['delete'])) {
-    $id = $_GET['delete'];
-    $sql = "DELETE FROM products WHERE id = '$id'";
-    $conn->query($sql);
-    header("Location:admin.php");
+
+    $id = (int) $_GET['delete'];
+
+    $stmt = $conn->prepare("DELETE FROM products WHERE id = ?");
+
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+
+    header("Location: admin.php");
     exit();
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| Category Deletion
+|--------------------------------------------------------------------------
+*/
+
+// Delete a category if it is not assigned to any products
 if (isset($_GET['delete-category'])) {
-    $id = $_GET['delete-category'];
-    $check = $conn->query("SELECT * FROM products WHERE category_id = '$id'");
+
+    $id = (int) $_GET['delete-category'];
+
+    $stmt = $conn->prepare("SELECT id FROM products WHERE category_id = ?");
+
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+
+    $check = $stmt->get_result();
+
     if ($check->num_rows > 0) {
+
         header("Location: admin.php?error=categoryinuse");
         exit();
+
     } else {
-        $conn->query("DELETE FROM categories WHERE id = '$id'");
+
+        $stmt = $conn->prepare("DELETE FROM categories WHERE id = ?");
+
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
         header("Location: admin.php");
         exit();
     }
 }
 
+
+/*
+|--------------------------------------------------------------------------
+| Load Categories
+|--------------------------------------------------------------------------
+*/
+
+// Load all categories for dropdown menus
 $categories = $conn->query("SELECT * FROM categories");
 
 
+/*
+|--------------------------------------------------------------------------
+| Add Product
+|--------------------------------------------------------------------------
+*/
 
+// Create a new product
 if (isset($_POST["add-product"])) {
-    $brand = $_POST["brand"];
-    $model = $_POST["model"];
+
+    $brand = trim($_POST["brand"]);
+    $model = trim($_POST["model"]);
     $price = $_POST["price"];
     $badge = $_POST["badge"];
-    $imageName = uniqid() . "_" . basename($_FILES['image']['name']);
-    $imageTmp = $_FILES['image']['tmp_name'];
-    $image = "upload/products/" . $imageName;
-    $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-
-    if (!in_array($_FILES['image']['type'], $allowedTypes)) {
-        die ('Just permitted images JPG, PNG and WEBP.');
-    }
-    move_uploaded_file($imageTmp, $image);
     $category_id = $_POST["category_id"];
     $stock = $_POST["stock"];
+
+    // Generate unique filename
+    $imageName = uniqid() . "_" . basename($_FILES['image']['name']);
+
+    $imageTmp = $_FILES['image']['tmp_name'];
+
+    // Upload destination
+    $image = "uploads/products/" . $imageName;
+
+    // Allowed image types
+    $allowedTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/webp'
+    ];
+
+    // Validate image format
+    if (!in_array($_FILES['image']['type'], $allowedTypes)) {
+
+        die(
+            "Only JPG, PNG and WEBP images are allowed."
+        );
+    }
+
+    move_uploaded_file($imageTmp, $image);
+
+    // Validate product values
     if ($price <= 0 || $stock <= 0) {
-        echo "Price and Stock must be greater than Zero.";
+
+        echo "Price and stock must be greater than zero.";
+
     } else {
-        $sql = "INSERT INTO products (brand, model, price, image, badge, category_id, stock) VALUES ('$brand', '$model', '$price', '$image', '$badge', '$category_id', '$stock')";
-        $conn->query($sql);
+
+        $stmt = $conn->prepare("INSERT INTO products (brand, model, price, image, badge, category_id, stock) VALUES (?, ?, ?, ?, ?, ?, ?)"
+        );
+
+        $stmt->bind_param("ssdssii", $brand, $model, $price, $image, $badge, $category_id, $stock);
+
+        $stmt->execute();
     }
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| Add Category
+|--------------------------------------------------------------------------
+*/
+
+// Create a new category
 if (isset($_POST["add-category"])) {
-    $categoryName = $_POST["category-name"];
-    $check = $conn->query("SELECT * FROM categories WHERE name = '$categoryName'");
+
+    $categoryName = trim($_POST["category-name"]);
+
+    $stmt = $conn->prepare("SELECT id FROM categories WHERE name = ?");
+
+    $stmt->bind_param("s", $categoryName);
+
+    $stmt->execute();
+
+    $check = $stmt->get_result();
+
     if ($check->num_rows == 0) {
-        $sql = "INSERT INTO categories (name) VALUES ('$categoryName')";
-        $conn->query($sql);
+
+        $stmt = $conn->prepare("INSERT INTO categories (name) VALUES (?)");
+
+        $stmt->bind_param("s", $categoryName);
+
+        $stmt->execute();
+
         header("Location: admin.php");
         exit();
+
     } else {
-        $error = "Category already exists.";
-        header("Location: admin.php?error=exists");
+
+        header(
+            "Location: admin.php?error=exists"
+        );
+
         exit();
-
     }
-
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| Load Product For Editing
+|--------------------------------------------------------------------------
+*/
+
 $editProduct = null;
+
 if (isset($_GET["edit"])) {
-    $id = $_GET["edit"];
-    $result = $conn->query("SELECT * FROM products WHERE id = '$id'");
+
+    $id = (int) $_GET["edit"];
+
+    $stmt = $conn->prepare("SELECT * FROM products WHERE id = ?");
+
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+
     $editProduct = $result->fetch_assoc();
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+/*
+|--------------------------------------------------------------------------
+| Update Product
+|--------------------------------------------------------------------------
+*/
+
+// Update an existing product
+if (isset($_POST["update-product"])) {
+
     $id = $_POST["id"];
     $brand = $_POST["brand"];
     $model = $_POST["model"];
@@ -90,18 +223,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stock = $_POST["stock"];
 
     $image = $editProduct["image"];
-    if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $image = "uploads/products/" . basename($_FILES["image"]["name"]);
+
+    // Upload a new image if provided
+    if (
+        isset($_FILES['image']) && $_FILES['image']['error'] == 0
+    ) {
+
+        $image = "uploads/products/".basename($_FILES["image"]["name"]);
+
         move_uploaded_file($_FILES['image']['tmp_name'], $image);
     }
 
-    $sql = "UPDATE products SET brand = '$brand', model = '$model', badge = '$badge', image = '$image', category_id = '$category_id', price = '$price', stock = '$stock' WHERE id = '$id'";
-    if ($conn->query($sql)){
-        header("Location: admin.php");
-        exit();
-    }else{
-        die ($conn->error);
-    }
+    $stmt = $conn->prepare("UPDATE products SET brand = ?, model = ?, badge = ?, image = ?, category_id = ?, price = ?, stock = ? WHERE id = ?");
+
+    $stmt->bind_param("ssssidii", $brand, $model, $badge, $image, $category_id, $price, $stock, $id);
+
+    $stmt->execute();
+
+    header("Location: admin.php");
+    exit();
 }
 ?>
 
@@ -114,9 +254,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Velora Admin</title>
     <link rel="stylesheet" href="css/admin.css">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" </head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+ </head>
 
 <body>
+    <!-- ===================== ADMIN HEADER =============================== -->
     <header class="admin-header">
         <div class="admin-logo">
             <img src="images/logo.png" alt="Velora">
@@ -126,9 +268,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <a href="logout.php">Logout</a>
         </div>
     </header>
+    <!-- ========================= ADMIN DASHBOARD ========================= -->
     <div class="admin-page">
         <div class="admin-dashboard">
+            <!-- ================ ADMIN NAVIGATION TABS ============================ -->
             <div id="admin-tabs">
+                <!-- Search Products Tab -->
                 <div id="search-wrapper">
                     <button onclick="Showtab('search-products')">
                         <i class="fa-solid fa-magnifying-glass">
@@ -138,6 +283,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     </button>
                 </div>
+                <!-- Add Product Tab -->
                 <div id="add-product-wrapper">
                     <button onclick="Showtab('add-product')">
                         <i class="fa-solid fa-plus">
@@ -146,6 +292,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         Add Product
                     </button>
                 </div>
+                <!-- Edit Product Tab -->
                 <div id ="edit-product-wrapper">
                     <button onclick="toggleEditMode()">
                         <i class="fa-solid fa-pen">
@@ -154,6 +301,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         Edit Product
                     </button>
                 </div>
+                <!-- Add Category Tab -->
                 <div id="add-category-wrapper">
                     <button onclick="Showtab('add-category')">
                         <i class="fa-solid fa-folder-plus">
@@ -162,18 +310,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         Add Category
                     </button>
                 </div>
+                <!-- Categories Tab -->
                 <div id="categories-wrapper">
                     <button onclick="Showtab('categories')">
                         <i class="fa-solid fa-list">
                             &nbsp;
                         </i>
-                        Category
+                        Categories
                     </button>
                 </div>
             </div>
+            <!-- ================= ADMIN SECTIONS =============== -->
             <div id="tabs-content" class="admin-sections">
 
-                <!---interior do botao search---->
+                <!-- Search Products Section -->
                 <div id="search-products" class="admin-section">
                     <h2 class="section-title">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -187,7 +337,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </form>
                 </div>
 
-                <!---interior do botao add-product---->
+                <!-- Add Product Section -->
                 <div id="add-product" class="admin-section">
                     <h2 class="section-title">
                         <i class="fa-solid fa-plus"></i>
@@ -231,7 +381,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </form>
                 </div>
 
-                <!---interior do botao add-category---->
+                <!-- Add Category Section -->
                 <div id="add-category" class="admin-section">
                     <h2 class="section-title">
                         <i class="fa-solid fa-folder-plus"></i>
@@ -263,11 +413,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 </div>
 
-                <!---interior do botao categories---->
+                <!-- Categories Filter Section -->
                 <div id="categories" class="admin-section">
                     <h2 class="section-title">
                         <i class="fa-solid fa-list"></i>
-                        &nbsp; Add Category
+                        &nbsp; categories
                     </h2>
 
                     <div class="admin-categories">
@@ -283,19 +433,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
 
             </div>
-
             <hr>
+                <!-- =============== EDIT PRODUCT MODAL ====================== -->
                 <?php if ($editProduct){?>
                 <div class="edit-modal">
                     <div class="edit-modal-content">
+                        <!--Modal Header -->
                         <div class="modal-header">
                         <h2>Edit Product</h2>
                         <button class="close-modal" onclick="closeEditModal()">
                             x
                         </button>
                         </div>
+                        <!--Product Update Form -->
                         <form class="edit-form" method="POST" enctype="multipart/form-data">
                             <div class="edit-body">
+                            <!--Product Image Section -->    
                             <div class="image-section">
                                 <img id="edit-image-preview" src="<?php echo $editProduct['image'];?>">
                                 <label for="edit-image-upload" class="upload-btn">
@@ -304,9 +457,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </label>
                                 <input type="file" name="image" id="edit-image-upload" hidden>
                             </div>
+                            <!--Product Information Form -->
                             <div class="form-grid">
                                 <div class="form-group">
-                                    <input type="hidden" name="id" value="<?php echo $editProduct['id']; ?>"
+                                    <input type="hidden" name="id" value="<?php echo $editProduct['id']; ?>">
                                     <label>Brand</label>
                                     <input type="text" name="brand" value="<?php echo $editProduct['brand'];?>">
                                 </div>
@@ -358,11 +512,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </div>
                             </div>
                             </div>
+                            <!-- Modal Actions -->
                             <div class="edit-buttons">
                                 <button type="button" class="cancel-btn" onclick="closeEditModal()">
                                     Cancel
                                 </button>
-                                <button type="submit" class="preview-btn">
+                                <button type="submit" name="update-product" class="preview-btn">
                                     Update Product
                                 </button>
                             </div>
@@ -370,6 +525,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 </div>
                 <?php } ?>
+                <!--============= Product List ============= -->
                 <h2>Products</h2>
                 <div class="admin-products">
                     <?php
@@ -408,153 +564,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     </div>
 
-    <script>
-
-        function Showtab(tabId) {
-
-            let tab = document.getElementById(tabId);
-            let tabsContent = document.getElementById("tabs-content");
-
-            // Fecha se já estiver aberto
-            if (tab.style.display === "block") {
-                tab.style.display = "none";
-                tabsContent.style.display ="none";
-
-                document.getElementById("search-wrapper").classList.remove("active");
-                document.getElementById("add-product-wrapper").classList.remove("active");
-                document.getElementById("edit-product-wrapper").classList.remove("edit-active");
-                document.getElementById("add-category-wrapper").classList.remove("active");
-                document.getElementById("categories-wrapper").classList.remove("active");
-
-                return;
-            }
-
-            // Fecha todos os painéis
-            document.getElementById("search-products").style.display = "none";
-            document.getElementById("add-product").style.display = "none";
-            document.getElementById("add-category").style.display = "none";
-            document.getElementById("categories").style.display = "none";
-
-            // Remove molduras ativas
-            document.getElementById("search-wrapper").classList.remove("active");
-            document.getElementById("add-product-wrapper").classList.remove("active");
-            document.getElementById("edit-product-wrapper").classList.remove("active");
-            document.getElementById("add-category-wrapper").classList.remove("active");
-            document.getElementById("categories-wrapper").classList.remove("active");
-
-            //desliga o modo edicao 
-            document.body.classList.remove("edit-mode");
-            document.getElementById("edit-product-wrapper").classList.remove("edit-active");
-
-            // Abre o painel clicado
-            tabsContent.style.display = "block";
-            tab.style.display = "block";
-
-            // Ativa a moldura correspondente
-            if (tabId === "search-products") {
-                document.getElementById("search-wrapper").classList.add("active");
-            }
-
-            if (tabId === "add-product") {
-                document.getElementById("add-product-wrapper").classList.add("active");
-            }
-
-            if (tabId === "add-category") {
-                document.getElementById("add-category-wrapper").classList.add("active");
-            }
-
-            if (tabId === "categories") {
-                document.getElementById("categories-wrapper").classList.add("active");
-            }
-        }
-        document.addEventListener("click", function(event) {
-
-    const tabsContent = document.getElementById("tabs-content");
-    const adminTabs = document.getElementById("admin-tabs");
-
-    if (
-        adminTabs.contains(event.target) ||
-        tabsContent.contains(event.target)
-    ) {
-        return;
-    }
-
-    // Esconde todos os painéis
-    document.getElementById("search-products").style.display = "none";
-    document.getElementById("add-product").style.display = "none";
-    document.getElementById("add-category").style.display = "none";
-    document.getElementById("categories").style.display = "none";
-
-    // Esconde o contentor principal
-    tabsContent.style.display = "none";
-
-    // Remove os estados ativos
-    document.getElementById("search-wrapper").classList.remove("active");
-    document.getElementById("add-product-wrapper").classList.remove("active");
-    document.getElementById("add-category-wrapper").classList.remove("active");
-    document.getElementById("categories-wrapper").classList.remove("active");
-
-});
-
-document.getElementById("image-upload").addEventListener("change", function(){
-
-    const file = this.files[0];
-
-    if(file){
-
-        document.getElementById("file-name").textContent = file.name;
-
-        const reader = new FileReader();
-
-        reader.onload = function(e){
-
-            const preview = document.getElementById("image-preview");
-
-            preview.src = e.target.result;
-            preview.style.display = "block";
-
-        }
-
-        reader.readAsDataURL(file);
-
-    }
-
-});
-let editMode = false;
-
-function toggleEditMode(){
-    // Fecha todos os painéis
-    document.getElementById("search-products").style.display = "none";
-    document.getElementById("add-product").style.display = "none";
-    document.getElementById("add-category").style.display = "none";
-    document.getElementById("categories").style.display = "none";
-    // Remove os estados ativos
-    document.getElementById("search-wrapper").classList.remove("active");
-    document.getElementById("add-product-wrapper").classList.remove("active");
-    document.getElementById("add-category-wrapper").classList.remove("active");
-    document.getElementById("categories-wrapper").classList.remove("active");
-
-    editMode = !editMode;
-    document.body.classList.toggle("edit-mode");
-    document.getElementById("edit-product-wrapper").classList.toggle("edit-active");
-
-    
-}
-
-function closeEditModal(){
-    window.location.href="admin.php";
-}
-document.getElementById("edit-image-upload").addEventListener("change", function(){
-    const file = this.files[0];
-    if (file){
-        const reader = new FileReader ();
-        reader.onload = function(e){
-            document.getElementById("edit-image-preview").src =e.target.result;
-        }
-        reader.readAsDataURL (file);
-    }
-});
-    </script>
+    <script src="js/admin.js"></script>
 </body>
 
 </html>

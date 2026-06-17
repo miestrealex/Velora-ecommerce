@@ -1,29 +1,33 @@
 <?php 
-session_start();
+//Start user session 
+session_start(); 
+
+//login error mensage
 $error = "";
+
+//resgistration error mensage
+$registerError = "";
+
+// handle login errors 
 if(isset($_GET["error"])){
     if ($_GET["error"] == "invalidlogin"){
         $error = "Invalid email or password";
-    }
-    if ($_GET["error"] == "emptyfields"){
+    }elseif ($_GET["error"] == "emptyfields"){
         $error = "Please fill in all fields";
-    }
-    if ($_GET["error"] == "invalidemail"){
+    }elseif ($_GET["error"] == "invalidemail"){
         $error = "Invalid email address";
     }
 }
-$registerError = "";
 
-
-
+//handle registration errors
 if(isset($_GET["registererror"])){
     if ($_GET["registererror"] == "emptyfields"){
         $registerError = "Please fill all fields";
     }
-    if ($_GET["registererror"] == "invalidemail"){
+    elseif ($_GET["registererror"] == "invalidemail"){
         $registerError = "Invalid email address";
     }
-    if ($_GET["registererror"] == "emailtaken") {
+    elseif ($_GET["registererror"] == "emailtaken") {
         $registerError = "Email already exists";
     }
 }
@@ -115,7 +119,7 @@ if(isset($_GET["registererror"])){
             </div>
         </div>
         <div id="sidebar">
-            <h2>Carrinho</h2>
+            <h2>Shopping Cart</h2>
             <div id="cart-items"></div>
             <div id="cart-total"></div>
         </div>
