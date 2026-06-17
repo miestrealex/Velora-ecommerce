@@ -1,5 +1,5 @@
 <?php 
-require 'db.php';
+require_once '<include/db.php';
 
 $username = trim($_POST["username"]);
 $email = trim($_POST["email"]);

@@ -1,5 +1,5 @@
 <?php
-include("db.php");
+require_once ("includes/db.php");
 
 $categories = $conn->query("SELECT * FROM categories");
 $id = $_GET["id"];
@@ -25,7 +25,7 @@ if (isset($_POST["update"])) {
 ?>
 <html>
     <head>
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="css/style.css">
     </head>
     <body>
 
