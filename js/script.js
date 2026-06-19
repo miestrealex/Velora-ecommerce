@@ -1,4 +1,10 @@
-let cartItems = JSON.parse(localStorage.getItem("cartItens")) || [];
+
+/* =========================
+   Variables & DOM Elements 
+========================= */
+
+
+let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
 let cartCount = 0;
 
 let allProducts = [];
@@ -24,7 +30,7 @@ const registerDropdown = document.getElementById("register-dropdown");
 const openRegister = document.getElementById("open-register");
 
 /* =========================
-   OVERLAY
+   Overlay Management 
 ========================= */
 
 function updateOverlay(){
@@ -55,7 +61,7 @@ function updateOverlay(){
 }
 
 /* =========================
-   LOCAL STORAGE
+   Local Storage
 ========================= */
 
 const savedCart = localStorage.getItem("cartItems");
@@ -73,13 +79,16 @@ document.getElementById("cart-count").innerText = cartCount;
 
 fetch("products.php")
 
-    .then(res => res.json())
-
+    .then(response => response.json())
     .then(products => {
 
         allProducts = products;
 
         displayProducts(products);
+
+    })
+    .catch(error =>{
+        console.error("Error loading products:", error);
 
     });
 
@@ -114,7 +123,6 @@ function getBadgeClass(badge){
 
 function displayProducts(products) {
     productsContainer.innerHTML = "";
-    console.log(products[0]);
     products.forEach(product => {
         productsContainer.innerHTML += `
         <div class="product-cart">
@@ -134,7 +142,7 @@ function displayProducts(products) {
                 CHF ${product.price}
             </p>
             <button onclick="addToCart('${product.brand}', '${product.model}', ${product.price}, '${product.image}')">
-                Comprar
+                Buy Now
             </button>
         </div>
         `;
@@ -189,7 +197,7 @@ function updateCart() {
         `;
         total += itemTotal;
     });
-    document.getElementById("cart-total").innerText =` Total: CHF ${total}`;
+    document.getElementById("cart-total").innerText =` Total: CHF ${total.toFixed(2)}`;
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
 }
 
