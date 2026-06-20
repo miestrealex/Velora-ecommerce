@@ -1,10 +1,12 @@
 Velora E-Commerce Project
 
+A full-stack e-commerce platform developed with PHP, MySQL, JavaScript, HTML5, and CSS3.
+
 Overview
 
-Velora is a web-based e-commerce platform developed with PHP, MySQL, JavaScript, HTML, and CSS.
+Velora is a web-based e-commerce application built as a practical learning project to develop full-stack web development skills.
 
-The project was created to learn full-stack web development concepts, including:
+The project focuses on:
 
 * User authentication
 * Product management
@@ -14,6 +16,7 @@ The project was created to learn full-stack web development concepts, including:
 * Admin dashboard development
 * File uploads
 * Session management
+* Code organization and security best practices
 
 ⸻
 
@@ -22,7 +25,7 @@ Features
 Customer Area
 
 * User registration
-* User login/logout
+* User login and logout
 * Product catalog
 * Product search
 * Shopping cart
@@ -43,20 +46,44 @@ Admin Area
 
 ⸻
 
+ Screenshots
+
+* Homepage
+
+![Homepage](screenshots/homepage.png)
+
+* Login
+
+![Login](screenshots/login.png)
+
+* Shopping Cart
+
+![Shopping Cart](screenshots/shopping-cart.png)
+
+* Admin Dashboard
+
+![Admin Dashboard](screenshots/admin-dashboard.png)
+
+* Edit Product
+
+![Edit Product](screenshots/admin-edit-product.png)
+
+⸻
+
 Technologies Used
 
 Backend
 
 * PHP 8+
 * MySQL
-* Sessions
+* PHP Sessions
 * Prepared Statements
 
 Frontend
 
 * HTML5
 * CSS3
-* JavaScript (Vanilla JS)
+* JavaScript (Vanilla JavaScript)
 * Font Awesome
 
 Development Tools
@@ -71,7 +98,6 @@ Development Tools
 Project Structure
 
 loja/
-
 ├── admin.php
 ├── index.php
 ├── login.php
@@ -80,45 +106,50 @@ loja/
 ├── products.php
 │
 ├── includes/
-│ └── db.php
+│   └── db.php
 │
 ├── css/
-│ ├── style.css
-│ └── admin.css
+│   ├── style.css
+│   └── admin.css
 │
 ├── js/
-│ ├── script.js
-│ └── admin.js
+│   ├── script.js
+│   └── admin.js
 │
 ├── images/
 │
+├── screenshots/
+│
 └── uploads/
-└── products/
+    └── products/
+
 ⸻
 
 Current Status
 
 Project actively under development.
 
-Completed:
+Completed Features
 
 * Authentication system
-* Admin panel
+* Admin dashboard
 * Product management
 * Category management
 * Shopping cart
 * Product search
+* Product filtering
+* Product badges
 * Image uploads
 
-Planned Improvements:
+Planned Improvements
 
-* Order system
+* Order management system
 * Checkout process
 * Stock validation
 * User profile page
 * Order history
 * Improved security
-* API integration
+* REST API integration
 
 ⸻
 
@@ -126,4 +157,10 @@ Author
 
 Alex Mestre
 
-Learning project focused on practical full-stack web development and software engineering principles.
+This project was created as part of my journey into full-stack web development, focusing on PHP, MySQL, JavaScript, software architecture, and clean coding practices.
+
+⸻
+
+License
+
+This project is intended for educational and portfolio purposes.

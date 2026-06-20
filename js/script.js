@@ -373,3 +373,52 @@ search.addEventListener("input", () => {
 
 });
 
+
+/*=========================
+CHECKOUT
+=========================*/
+const checkoutBtn = document.getElementById("checkout-btn");
+
+if (checkoutBtn) {
+
+    checkoutBtn.addEventListener("click", () => {
+
+        if (cartItems.length === 0) {
+            alert("Your cart is empty.");
+            return;
+        }
+
+        alert("Order placed successfully!");
+
+        cartItems = [];
+        cartCount = 0;
+
+        localStorage.removeItem("cartItems");
+
+        document.getElementById("cart-count").innerText = 0;
+
+        updateCart();
+
+    });
+
+}
+
+/*=========================
+CLEAR CART
+=========================*/
+
+const clearCartBtn = document.getElementById("clear-cart");
+if (clearCartBtn){
+    clearCartBtn.addEventListener("click", () =>{
+        if (cartItems.legth === 0){
+            return;
+        }
+        if (confirm("Clear all products form cart?")){
+            cartItems = [];
+            cartCount = 0;
+            localStorage.removeItem("cartItems");
+            document.getElementById("cart-count").innerText = 0;
+            updateCart();
+        }
+    });
+}

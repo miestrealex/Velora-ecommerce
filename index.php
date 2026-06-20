@@ -122,6 +122,14 @@ if(isset($_GET["registererror"])){
             <h2>Shopping Cart</h2>
             <div id="cart-items"></div>
             <div id="cart-total"></div>
+            <div class="cart-actions">
+                <button id="checkout-btn">
+                    Check Out
+                </button>
+                <button id="clear-cart">
+                    Clear Cart
+                </button>
+            </div>
         </div>
           <div id="overlay"></div>
 
