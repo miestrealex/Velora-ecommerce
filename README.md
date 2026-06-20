@@ -140,11 +140,14 @@ Completed Features
 * Product filtering
 * Product badges
 * Image uploads
+* Checkout process
+* Cart persistence (Local Storage)
+* Quantity controls
+* Clear cart functionality
 
 Planned Improvements
 
 * Order management system
-* Checkout process
 * Stock validation
 * User profile page
 * Order history
